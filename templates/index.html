@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Personal Electronics Shopping Assistant</title>
+  <meta name="description" content="Smart conversational shopping assistant for electronics, smartphones, laptops, audio, TVs, cameras, and accessories with intelligent budget filtering, exact model search, and comparisons.">
+  <meta property="og:title" content="AI Personal Electronics Shopping Assistant">
+  <meta property="og:description" content="Smart conversational shopping assistant for electronics, smartphones, laptops, audio, TVs, cameras, and accessories with intelligent budget filtering, exact model search, and comparisons.">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- In-app Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Top Navigation Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="brand-logo" id="brandHomeBtn">
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">ElectroStyle AI</span>
+          <span class="brand-subtitle">Electronics & Fashion Shopping Assistant</span>
+        </div>
+      </div>
+
+      <div class="search-bar-wrapper">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="mainSearchInput" placeholder="Search devices, sneakers, fashion, or ask AI (e.g. 'Redmi', 'Nike shoes', 'HP laptops')..." autocomplete="off">
+        <button id="clearSearchBtn" class="clear-search-btn" title="Clear Search">&times;</button>
+        <button id="headerAskAiBtn" class="header-ai-btn" title="Ask Shopping Assistant">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+          Ask AI
+        </button>
+      </div>
+
+      <div class="header-actions">
+        <button id="compareBarTrigger" class="compare-badge-btn" title="Comparison List">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg>
+          <span>Compare</span>
+          <span id="compareCountBadge" class="count-pill">0</span>
+        </button>
+        <button id="chatToggleHeaderBtn" class="ai-assistant-btn">
+          <div class="ai-avatar-pulse"></div>
+          <span>Assistant</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Department Selector Tab Bar -->
+    <div class="department-tabs-bar">
+      <div class="dept-tabs-container">
+        <button class="dept-tab active" data-department="" id="deptTabAll">All Departments</button>
+        <button class="dept-tab" data-department="electronics" id="deptTabElectronics">⚡ Electronics & Devices</button>
+        <button class="dept-tab" data-department="fashion" id="deptTabFashion">✨ Fashion, Footwear & Lifestyle</button>
+      </div>
+    </div>
+
+    <!-- Category Pills Bar -->
+    <nav class="categories-nav">
+      <div class="categories-scroll" id="categoriesContainer">
+        <button class="cat-pill active" data-category="">All Categories</button>
+        <button class="cat-pill" data-category="smartphone">📱 Smartphones</button>
+        <button class="cat-pill" data-category="laptop">💻 Laptops</button>
+        <button class="cat-pill" data-category="footwear">👟 Footwear & Sneakers</button>
+        <button class="cat-pill" data-category="apparel">🧥 Apparel & Techwear</button>
+        <button class="cat-pill" data-category="smart_rings">💍 Smart Rings</button>
+        <button class="cat-pill" data-category="eyewear">🕶️ Eyewear & Smart Glasses</button>
+        <button class="cat-pill" data-category="watches">🕒 Watches & Horology</button>
+        <button class="cat-pill" data-category="headphone">🎧 Headphones</button>
+        <button class="cat-pill" data-category="earbuds">🎵 Earbuds</button>
+        <button class="cat-pill" data-category="smartwatch">⌚ Smartwatches</button>
+        <button class="cat-pill" data-category="camera">📷 Cameras & Drones</button>
+        <button class="cat-pill" data-category="gaming">🎮 Gaming Gear</button>
+        <button class="cat-pill" data-category="bags">🎒 Bags & Tech Packs</button>
+        <button class="cat-pill" data-category="tv">📺 TVs</button>
+        <button class="cat-pill" data-category="monitor">🖥️ Monitors</button>
+        <button class="cat-pill" data-category="tablet">📟 Tablets</button>
+        <button class="cat-pill" data-category="storage">💾 Storage</button>
+        <button class="cat-pill" data-category="accessories">⌨️ Accessories</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Application Body -->
+  <main class="main-content">
+    <div class="app-layout">
+      <!-- Filter Sidebar -->
+      <aside class="filter-sidebar" id="filterSidebar">
+        <div class="sidebar-header">
+          <h3>Filters & Sorting</h3>
+          <button id="resetFiltersBtn" class="text-btn">Reset All</button>
+        </div>
+
+        <!-- Sort by -->
+        <div class="filter-group">
+          <label class="filter-label" for="sortSelect">Sort By</label>
+          <select id="sortSelect" class="filter-select">
+            <option value="popular">Featured / Best Match</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+            <option value="rating">Highest Rated</option>
+          </select>
+        </div>
+
+        <!-- Price Range Slider -->
+        <div class="filter-group">
+          <div class="price-header">
+            <label class="filter-label">Max Price</label>
+            <span id="priceDisplay" class="price-display">₹2,50,000</span>
+          </div>
+          <input type="range" id="priceRangeInput" min="1000" max="250000" step="1000" value="250000" class="range-slider">
+          <div class="price-minmax">
+            <span>₹1,000</span>
+            <span>₹2,50,000+</span>
+          </div>
+        </div>
+
+        <!-- Brand Selector -->
+        <div class="filter-group">
+          <label class="filter-label">Brands</label>
+          <div class="brand-search-box">
+            <input type="text" id="brandSearchInput" placeholder="Filter brands..." class="filter-input-sm">
+          </div>
+          <div class="brand-list-scroll" id="brandCheckboxList">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Quick Use-Cases -->
+        <div class="filter-group">
+          <label class="filter-label">Popular Use Cases</label>
+          <div class="tags-cloud" id="useCaseTags">
+            <button class="tag-chip" data-usecase="gaming">Gaming</button>
+            <button class="tag-chip" data-usecase="battery">Long Battery</button>
+            <button class="tag-chip" data-usecase="photography">Photography</button>
+            <button class="tag-chip" data-usecase="student">Students</button>
+            <button class="tag-chip" data-usecase="audiophile">Audiophile</button>
+            <button class="tag-chip" data-usecase="travel">Travel</button>
+            <button class="tag-chip" data-usecase="budget">Budget Pick</button>
+          </div>
+        </div>
+
+        <!-- Assistant Promo Banner in Sidebar -->
+        <div class="assistant-card-promo">
+          <div class="promo-badge">AI Assistant</div>
+          <h4>Need expert advice?</h4>
+          <p>Ask our assistant about specs, comparisons, or exact models like <em>"Redmi"</em> or <em>"HP laptops"</em>.</p>
+          <button id="promoChatBtn" class="btn-primary-sm">Open Assistant</button>
+        </div>
+      </aside>
+
+      <!-- Product Catalog Section -->
+      <section class="catalog-section">
+        <!-- Catalog Subheader -->
+        <div class="catalog-header">
+          <div class="results-meta">
+            <h2 id="catalogTitle">All Electronics</h2>
+            <span id="resultsCount" class="results-count">Showing products...</span>
+          </div>
+
+          <div class="catalog-view-actions">
+            <!-- Active Filter Chips -->
+            <div id="activeFilterChips" class="active-chips-container"></div>
+            <button id="mobileFilterToggle" class="mobile-filter-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="21" y2="21"/><line x1="4" x2="20" y1="3" y2="3"/><line x1="4" x2="20" y1="12" y2="12"/><circle cx="8" cy="12" r="3"/><circle cx="16" cy="3" r="3"/><circle cx="12" cy="21" r="3"/></svg>
+              Filters
+            </button>
+          </div>
+        </div>
+
+        <!-- Products Grid Container -->
+        <div id="productsGrid" class="products-grid">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Empty State Container -->
+        <div id="emptyCatalogState" class="empty-state hidden">
+          <div class="empty-icon">🔍</div>
+          <h3>No products match your exact criteria</h3>
+          <p>Try clearing some filters or ask our AI Shopping Assistant to find similar recommendations!</p>
+          <div class="empty-actions">
+            <button id="emptyClearBtn" class="btn-primary">Clear Filters</button>
+            <button id="emptyAskAiBtn" class="btn-secondary">Ask AI Assistant</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Product Details Modal -->
+  <div id="productDetailModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="closeDetailModalBtn">&times;</button>
+      <div id="productDetailContent" class="modal-body">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparison Modal -->
+  <div id="comparisonModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg>
+          <h3>Product Comparison Matrix</h3>
+        </div>
+        <div class="modal-header-actions">
+          <button id="clearComparisonBtn" class="btn-text">Clear All</button>
+          <button class="modal-close-btn" id="closeComparisonModalBtn">&times;</button>
+        </div>
+      </div>
+      <div id="comparisonModalContent" class="modal-body">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Comparison Dock -->
+  <div id="comparisonDock" class="comparison-dock hidden">
+    <div class="dock-info">
+      <span class="dock-badge" id="dockCount">0 / 4</span>
+      <span class="dock-label">Products in comparison</span>
+    </div>
+    <div class="dock-thumbnails" id="dockThumbnails"></div>
+    <div class="dock-actions">
+      <button id="dockCompareBtn" class="btn-primary-sm">Compare Now</button>
+      <button id="dockClearBtn" class="dock-close-btn" title="Clear">&times;</button>
+    </div>
+  </div>
+
+  <!-- Floating AI Assistant Launcher Button -->
+  <button id="floatingAiBtn" class="floating-ai-launcher" aria-label="Open AI Shopping Assistant">
+    <div class="launcher-glow"></div>
+    <div class="launcher-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+    </div>
+    <div class="launcher-label">Ask Shopping AI</div>
+  </button>
+
+  <!-- AI Shopping Assistant Chat Drawer / Window -->
+  <div id="aiChatDrawer" class="chat-drawer hidden">
+    <!-- Chat Header -->
+    <div class="chat-header">
+      <div class="chat-agent-info">
+        <div class="agent-avatar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+        </div>
+        <div>
+          <div class="agent-name">ElectroStyle AI Assistant</div>
+          <div class="agent-status"><span class="status-dot"></span> Powered by Gemini 2.5 Flash & Catalog Grounding</div>
+        </div>
+      </div>
+      <div class="chat-controls">
+        <button id="resetChatBtn" class="chat-ctrl-btn" title="Reset Conversation">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+        <button id="closeChatBtn" class="chat-ctrl-btn" title="Close Chat">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Suggested Quick Queries -->
+    <div class="quick-prompts-bar">
+      <span class="prompts-label">Try asking:</span>
+      <div class="prompts-scroll" id="quickPromptsContainer">
+        <button class="prompt-pill" data-prompt="Tell me about Redmi K51">Redmi K51</button>
+        <button class="prompt-pill" data-prompt="I want Redmi">I want Redmi</button>
+        <button class="prompt-pill" data-prompt="I want Samsung phones under 30000">Samsung &lt; ₹30k</button>
+        <button class="prompt-pill" data-prompt="I want Nike shoes">Nike shoes</button>
+        <button class="prompt-pill" data-prompt="Compare Galaxy S24 Ultra and iPhone 15 Pro Max">Compare S24 vs iPhone 15</button>
+        <button class="prompt-pill" data-prompt="Compare MacBook Air M3 and Dell XPS 14">MacBook vs Dell XPS</button>
+        <button class="prompt-pill" data-prompt="Smart rings for sleep and recovery">Smart Rings</button>
+        <button class="prompt-pill" data-prompt="Noise cancelling headphones for travel">ANC Headphones</button>
+        <button class="prompt-pill" data-prompt="Waterproof jackets for outdoor">Techwear Jackets</button>
+      </div>
+    </div>
+
+    <!-- Chat Messages Container -->
+    <div class="chat-messages" id="chatMessagesContainer">
+      <!-- Welcome message -->
+      <div class="message-bubble assistant">
+        <div class="message-avatar">AI</div>
+        <div class="message-body">
+          <div class="message-text">
+            👋 Welcome! I am your <strong>AI Personal Shopping Assistant</strong> for Electronics & Lifestyle Fashion.
+            <br><br>
+            Ask me about any smartphone, laptop, headphones, smartwatches, cameras, footwear, smart rings, or techwear jackets.
+            <br><br>
+            Try asking <em>"I want Redmi"</em>, <em>"Nike shoes"</em>, or <em>"Tell me about Redmi K51"</em>!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Typing indicator -->
+    <div id="typingIndicator" class="typing-indicator hidden">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <span>Shopping Assistant is researching...</span>
+    </div>
+
+    <!-- Chat Input Area -->
+    <form id="chatForm" class="chat-input-area">
+      <input type="text" id="chatInput" placeholder="Ask about phones, laptops, specs, comparisons..." autocomplete="off" required>
+      <button type="submit" id="chatSendBtn" class="chat-send-btn" title="Send">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </form>
+  </div>
+
+  <!-- Vanilla JavaScript modules -->
+  <script src="/static/js/product-details.js"></script>
+  <script src="/static/js/chat.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

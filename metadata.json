@@ -1,0 +1,6 @@
+{
+  "name": "AI Personal Electronics Shopping Assistant",
+  "description": "Smart conversational shopping assistant for electronics, smartphones, laptops, audio, TVs, cameras, and accessories with intelligent budget filtering, exact model search, and comparisons.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
